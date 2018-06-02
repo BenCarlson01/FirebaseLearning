@@ -1,13 +1,18 @@
 package com.bemad.bcarlson.firebaselearning;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -18,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private EditText mChildValueEditText;
     private Button mAddButton, mRemoveButton;
+    private TextView mChildValueTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         mChildValueEditText = (EditText) findViewById(R.id.childValueEditText);
         mAddButton = (Button) findViewById(R.id.addButton);
         mRemoveButton = (Button) findViewById(R.id.removeButton);
+        mChildValueTextView = (TextView) findViewById(R.id.childValueTextView);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference mRef = database.getReference("ben0");
@@ -43,6 +50,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mRef.removeValue();
+            }
+        });
+
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String childValue = String.valueOf(dataSnapshot.getValue());
+                mChildValueTextView.setText(childValue);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //On case of error when writing to mRef
             }
         });
     }

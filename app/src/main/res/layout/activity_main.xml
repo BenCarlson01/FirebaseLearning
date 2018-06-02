@@ -18,16 +18,17 @@
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add"
-        tools:layout_editor_absoluteX="65dp"
-        tools:layout_editor_absoluteY="46dp" />
+        android:text="Add"/>
 
     <Button
         android:id="@+id/removeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remove"
-        tools:layout_editor_absoluteX="233dp"
-        tools:layout_editor_absoluteY="46dp"/>
+        android:text="Remove"/>
+
+    <TextView
+        android:id="@+id/childValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
