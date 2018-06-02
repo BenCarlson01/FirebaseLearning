@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "123177532299",
+    "firebase_url": "https://fir-learning-5e499.firebaseio.com",
+    "project_id": "fir-learning-5e499",
+    "storage_bucket": "fir-learning-5e499.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123177532299:android:d740f473a3dbe6f8",
+        "android_client_info": {
+          "package_name": "com.bemad.bcarlson.firebaselearning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123177532299-glq1jofr8tuj98h0djn81dmb6dd9nvp8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bemad.bcarlson.firebaselearning",
+            "certificate_hash": "a19019f48c3563e310bfcce58f679bae0dfd0000"
+          }
+        },
+        {
+          "client_id": "123177532299-4b5mjoiq8ti8dbb4sk87lnnu8vmpc9nl.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "123177532299-4b5mjoiq8ti8dbb4sk87lnnu8vmpc9nl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq-7gJ8pR7KQRSKvcOFqZfJTv3n1M5am0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123177532299-4b5mjoiq8ti8dbb4sk87lnnu8vmpc9nl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
