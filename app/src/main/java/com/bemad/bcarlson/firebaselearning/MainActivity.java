@@ -30,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mChildValueEditText = (EditText) findViewById(R.id.childValueEditText);
-        mAddButton = (Button) findViewById(R.id.addButton);
-        mRemoveButton = (Button) findViewById(R.id.removeButton);
-        mChildValueTextView = (TextView) findViewById(R.id.childValueTextView);
+        mChildValueEditText = findViewById(R.id.childValueEditText);
+        mAddButton = findViewById(R.id.addButton);
+        mRemoveButton = findViewById(R.id.removeButton);
+        mChildValueTextView = findViewById(R.id.childValueTextView);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference mRef = database.getReference("ben0");
