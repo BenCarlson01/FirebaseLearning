@@ -1,5 +1,6 @@
 package com.bemad.bcarlson.firebaselearning;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
      *      Episode 1: https://www.youtube.com/watch?v=9rNpfu187wg&list=PLxabZQCAe5fgLqi5im08UYz7R5nfBQYBs
      */
     private EditText mChildValueEditText;
-    private Button mAddButton, mRemoveButton;
+    private Button mAddButton, mRemoveButton, mSignOutButton;
     private TextView mChildValueTextView;
 
     @Override
@@ -63,6 +66,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 //On case of error when writing to mRef
+            }
+        });
+
+        mSignOutButton = findViewById(R.id.signOutButton);
+        mSignOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

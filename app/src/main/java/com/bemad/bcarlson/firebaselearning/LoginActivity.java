@@ -15,12 +15,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText mEmailLogin, mPasswordLogin,
-            mEmailRegistration, mPasswordRegistration;
+            mEmailRegistration, mPasswordRegistration,
+            mNameRegistration, mAgeRegistration, mSexRegistration;
     private Button mButtonLogin, mButtonRegistration;
 
     private FirebaseAuth mAuth;
@@ -35,6 +39,10 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordLogin = findViewById(R.id.passwordLogin);
         mEmailRegistration = findViewById(R.id.emailRegistration);
         mPasswordRegistration = findViewById(R.id.passwordRegistration);
+
+        mNameRegistration = findViewById(R.id.nameRegistration);
+        mAgeRegistration = findViewById(R.id.ageRegistration);
+        mSexRegistration = findViewById(R.id.sexRegistration);
 
         mButtonLogin = findViewById(R.id.buttonLogin);
         mButtonRegistration = findViewById(R.id.buttonRegistration);
@@ -61,7 +69,26 @@ public class LoginActivity extends AppCompatActivity {
                         LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (!task.isSuccessful()) {
+                                if (task.isSuccessful()) {
+                                     String userID = mAuth.getCurrentUser().getUid();
+                                     DatabaseReference currentUserDB =
+                                             FirebaseDatabase
+                                                     .getInstance()
+                                                     .getReference()
+                                                     .child("Users")
+                                                     .child(userID);
+                                     HashMap<String, String> newPost = new HashMap<>();
+
+                                     String name = mNameRegistration.getText().toString();
+                                     String age = mAgeRegistration.getText().toString();
+                                     String sex = mSexRegistration.getText().toString();
+
+                                     newPost.put("name", name);
+                                     newPost.put("age", age);
+                                     newPost.put("sex", sex);
+
+                                     currentUserDB.setValue(newPost);
+                                } else {
                                     FirebaseAuthException e = (FirebaseAuthException )task.getException();
                                     Toast.makeText(LoginActivity.this,
                                             "Registration Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
