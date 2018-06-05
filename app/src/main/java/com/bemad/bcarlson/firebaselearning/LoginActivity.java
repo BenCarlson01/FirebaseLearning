@@ -15,8 +15,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,7 +28,8 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
     private EditText mEmailLogin, mPasswordLogin,
             mEmailRegistration, mPasswordRegistration,
-            mNameRegistration, mAgeRegistration, mSexRegistration;
+            mNameRegistration, mAgeRegistration, mSexRegistration,
+            mUsernameRegistration;
     private Button mButtonLogin, mButtonRegistration;
 
     private FirebaseAuth mAuth;
@@ -39,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordLogin = findViewById(R.id.passwordLogin);
         mEmailRegistration = findViewById(R.id.emailRegistration);
         mPasswordRegistration = findViewById(R.id.passwordRegistration);
+        mUsernameRegistration = findViewById(R.id.usernameRegistration);
 
         mNameRegistration = findViewById(R.id.nameRegistration);
         mAgeRegistration = findViewById(R.id.ageRegistration);
@@ -63,39 +69,64 @@ public class LoginActivity extends AppCompatActivity {
         mButtonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = mEmailRegistration.getText().toString();
-                String password = mPasswordRegistration.getText().toString();
-                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
-                        LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                     String userID = mAuth.getCurrentUser().getUid();
-                                     DatabaseReference currentUserDB =
-                                             FirebaseDatabase
-                                                     .getInstance()
-                                                     .getReference()
-                                                     .child("Users")
-                                                     .child(userID);
-                                     HashMap<String, String> newPost = new HashMap<>();
+                final String email = mEmailRegistration.getText().toString();
+                final String password = mPasswordRegistration.getText().toString();
+                final String username = mUsernameRegistration.getText().toString();
 
-                                     String name = mNameRegistration.getText().toString();
-                                     String age = mAgeRegistration.getText().toString();
-                                     String sex = mSexRegistration.getText().toString();
+                Query usernameQuery = FirebaseDatabase
+                                            .getInstance()
+                                            .getReference()
+                                            .child("Users")
+                                            .orderByChild("username")
+                                            .equalTo(username);
+                usernameQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() > 0) {
+                            Toast.makeText(LoginActivity.this,
+                                    "Username taken, please choose another", Toast.LENGTH_SHORT).show();
+                        } else {
+                            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
+                                    LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if (task.isSuccessful()) {
+                                                String userID = mAuth.getCurrentUser().getUid();
+                                                final DatabaseReference currentUserDB =
+                                                        FirebaseDatabase
+                                                                .getInstance()
+                                                                .getReference()
+                                                                .child("Users")
+                                                                .child(userID);
+                                                HashMap<String, String> newPost = new HashMap<>();
 
-                                     newPost.put("name", name);
-                                     newPost.put("age", age);
-                                     newPost.put("sex", sex);
+                                                final String name = mNameRegistration.getText().toString();
+                                                final String age = mAgeRegistration.getText().toString();
+                                                final String sex = mSexRegistration.getText().toString();
 
-                                     currentUserDB.setValue(newPost);
-                                } else {
-                                    FirebaseAuthException e = (FirebaseAuthException )task.getException();
-                                    Toast.makeText(LoginActivity.this,
-                                            "Registration Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    //message.hide();
-                                }
-                            }
-                        });
+                                                newPost.put("username", username);
+                                                newPost.put("name", name);
+                                                newPost.put("age", age);
+                                                newPost.put("sex", sex);
+
+                                                currentUserDB.setValue(newPost);
+                                            } else {
+                                                FirebaseAuthException e = (FirebaseAuthException )task.getException();
+                                                Toast.makeText(LoginActivity.this,
+                                                        "Registration Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                //message.hide();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
         });
 
